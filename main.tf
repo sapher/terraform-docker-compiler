@@ -1,8 +1,10 @@
+provider "external" {}
+
 data "external" "input_sha" {
   program = ["python", "${path.module}/scripts/sha.py"]
 
   query = {
-    dir = "${var.input}"
+    dir = var.input
   }
 }
 
@@ -15,20 +17,20 @@ data "external" "output_exist" {
 }
 
 resource "null_resource" "make" {
-  triggers {
-    input_sha = "${data.external.input_sha.result["sha"]}",
-    output_exist = "${data.external.output_exist.result["exist"]}"
+  triggers = {
+    input_sha = data.external.input_sha.result["sha"]
+    output_exist = data.external.output_exist.result["exist"]
   }
 
   provisioner "local-exec" {
     command = "${path.module}/scripts/build.py"
 
-    environment {
-      IMAGE      = "${var.image}"
-      INPUT_DIR  = "${var.input}"
-      OUTPUT_DIR = "${var.output}"
-      SCRIPT     = "${var.script}"
-      FILENAME   = "${var.filename}"
+    environment = {
+      IMAGE      = var.image
+      INPUT_DIR  = var.input
+      OUTPUT_DIR = var.output
+      SCRIPT     = var.script
+      FILENAME   = var.filename
     }
   }
 
