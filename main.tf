@@ -35,7 +35,7 @@ resource "null_resource" "make" {
   }
 
   provisioner "local-exec" {
-    when    = "destroy"
+    when    = destroy
     command = "rm -f ${var.output}/${var.filename}"
   }
 }

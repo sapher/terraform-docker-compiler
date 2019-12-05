@@ -1,2 +1,6 @@
 .terraform
 .idea
+output
+terraform.*
+.DS_Store
+node_modules
